@@ -6,13 +6,14 @@ import java.util.Date;
 import java.util.Scanner;
 
 import modelo.entidade.Reserva;
+import modelo.excecao.ExcecaoDominio;
 
 public class Programa {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
+		try {
 		System.out.print("Numero do Quarto: ");
 		int num = sc.nextInt();
 		System.out.print("Data Check-in(dd/mm/aaaa): ");
@@ -31,14 +32,22 @@ public class Programa {
 			System.out.print("Data check-out(dd/mm/aaaa): ");
 			checkOut = sdf.parse(sc.next());
 			
-			String erro = reserv.atualizarDatas(checkIn, checkOut);
-			if (erro != null) {
-				System.out.println("Erro na reserva: " +  erro);
-			}else {
+			reserv.atualizarDatas(checkIn, checkOut);
 			System.out.println(reserv);
-			}
-		sc.close();
-	}
+		}
+		}
+		catch(ParseException e) {
+			System.out.println("Formato de data inválido");
+		}
+		catch(ExcecaoDominio e) {
+			System.out.println("Erro na reserva: " + e.getMessage());
+		}
+		catch(RuntimeException e) {
+			System.out.println("Erro Inesperado");
+		}
+		
+		
+		sc.close();	
 	}
 }
 

@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import modelo.excecao.ExcecaoDominio;
+
 public class Reserva {
 	private Integer numSala;
 	private Date checkIn;
@@ -40,19 +42,20 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 	
-	public String atualizarDatas(Date checkIn, Date checkOut) {
+	public void atualizarDatas(Date checkIn, Date checkOut){
 		
 		Date agora = new Date();
 		if(checkIn.before(agora) || checkOut.before(agora)) {
-			return "Erro na Reserva: Para atualizar a reserva deve conter uma data futura";
+			throw new ExcecaoDominio("Erro na Reserva: Para atualizar a reserva deve conter uma data futura");
 		}
 		if (!checkOut.after(checkIn)) {
-			return "Erro na reserva: a data do Check-out deve ser posterior a data de Check-in";
+			throw new ExcecaoDominio("Erro na reserva: a data do Check-out deve ser posterior a data de Check-in");
 		}	
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		return null;
 	}
+	
+	@Override
 	public String toString() {
 		return "Sala " + numSala + ", check-in: "
 				+ sdf.format(checkIn)
